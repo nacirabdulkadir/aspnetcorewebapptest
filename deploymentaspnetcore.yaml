@@ -28,9 +28,9 @@ metadata:
 spec:
   selector:
     app: aspnetcorewebapptest
-  type: LoadBalancer
+  type: NodePort
   ports:
     - protocol: TCP
-      port: 5001
+      port: 3001
       targetPort: 3001
       nodePort: 31111
