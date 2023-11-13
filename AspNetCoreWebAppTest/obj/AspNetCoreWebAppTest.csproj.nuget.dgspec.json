@@ -1,23 +1,20 @@
 {
   "format": 1,
   "restore": {
-    "D:\\Dev\\Test\\asp.netcorewebapptest\\AspNetCoreWebAppTest\\AspNetCoreWebAppTest.csproj": {}
+    "D:\\MyProjects\\GitHub\\aspnetcorewebapptest\\AspNetCoreWebAppTest\\AspNetCoreWebAppTest.csproj": {}
   },
   "projects": {
-    "D:\\Dev\\Test\\asp.netcorewebapptest\\AspNetCoreWebAppTest\\AspNetCoreWebAppTest.csproj": {
+    "D:\\MyProjects\\GitHub\\aspnetcorewebapptest\\AspNetCoreWebAppTest\\AspNetCoreWebAppTest.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "D:\\Dev\\Test\\asp.netcorewebapptest\\AspNetCoreWebAppTest\\AspNetCoreWebAppTest.csproj",
+        "projectUniqueName": "D:\\MyProjects\\GitHub\\aspnetcorewebapptest\\AspNetCoreWebAppTest\\AspNetCoreWebAppTest.csproj",
         "projectName": "AspNetCoreWebAppTest",
-        "projectPath": "D:\\Dev\\Test\\asp.netcorewebapptest\\AspNetCoreWebAppTest\\AspNetCoreWebAppTest.csproj",
-        "packagesPath": "C:\\Users\\TCANACIR\\.nuget\\packages\\",
-        "outputPath": "D:\\Dev\\Test\\asp.netcorewebapptest\\AspNetCoreWebAppTest\\obj\\",
+        "projectPath": "D:\\MyProjects\\GitHub\\aspnetcorewebapptest\\AspNetCoreWebAppTest\\AspNetCoreWebAppTest.csproj",
+        "packagesPath": "C:\\Users\\abdul\\.nuget\\packages\\",
+        "outputPath": "D:\\MyProjects\\GitHub\\aspnetcorewebapptest\\AspNetCoreWebAppTest\\obj\\",
         "projectStyle": "PackageReference",
-        "fallbackFolders": [
-          "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
-        ],
         "configFilePaths": [
-          "C:\\Users\\TCANACIR\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\abdul\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [
@@ -25,10 +22,8 @@
         ],
         "sources": {
           "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
-          "http://artifactory.turkcell.com.tr/artifactory/api/nuget/nuget/": {},
-          "https://api.nuget.org/v3/index.json": {},
-          "https://artifactory.turkcell.com.tr/artifactory/api/nuget/virtual-nuget": {},
-          "https://parsdev.turkcell.com.tr/nuget/nuget": {}
+          "C:\\Program Files\\dotnet\\sdk\\7.0.302\\Sdks\\Microsoft.NET.Sdk.Web\\library-packs": {},
+          "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {
           "net6.0": {
@@ -45,17 +40,36 @@
       "frameworks": {
         "net6.0": {
           "targetAlias": "net6.0",
+          "dependencies": {
+            "Confluent.Kafka": {
+              "target": "Package",
+              "version": "[2.3.0, )"
+            },
+            "Microsoft.VisualStudio.Azure.Containers.Tools.Targets": {
+              "target": "Package",
+              "version": "[1.18.1, )"
+            }
+          },
           "imports": [
             "net461",
             "net462",
             "net47",
             "net471",
             "net472",
-            "net48"
+            "net48",
+            "net481"
           ],
           "assetTargetFallback": true,
           "warn": true,
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\5.0.413\\RuntimeIdentifierGraph.json"
+          "frameworkReferences": {
+            "Microsoft.AspNetCore.App": {
+              "privateAssets": "none"
+            },
+            "Microsoft.NETCore.App": {
+              "privateAssets": "all"
+            }
+          },
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\7.0.302\\RuntimeIdentifierGraph.json"
         }
       }
     }
