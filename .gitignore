@@ -2,6 +2,10 @@
 **/[Bb]in/
 **/[Oo]bj/
 
+AspNetCoreWebAppTest/bin/
+AspNetCoreWebAppTest/obj/
+
+
 # .NET Core projelerinde genellikle var olan log dosyaları ve diğer geçici dosyalar.
 *.log
 *.log.*
