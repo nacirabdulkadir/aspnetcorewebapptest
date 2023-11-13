@@ -1,0 +1,40 @@
+# Öncelikle bin ve obj klasörleri yoksayılır, çünkü bunlar derleme sonuçlarıdır.
+**/[Bb]in/
+**/[Oo]bj/
+
+# .NET Core projelerinde genellikle var olan log dosyaları ve diğer geçici dosyalar.
+*.log
+*.log.*
+*.tmp
+
+# Eğer varsa, IDE ve editöre özgü ayar dosyaları yoksayılabilir.
+# Örneğin Visual Studio için:
+*.user
+*.userosscache
+*.suo
+*.userprefs
+*.pdb
+*.opendb
+
+# Eğer Entity Framework kullanıyorsanız, migrations klasörü dışındaki tüm dosyaları yoksayabilirsiniz.
+**/Migrations/*.cs
+!**/Migrations/*.Designer.cs
+
+# Eğer varsa, paketlenmiş uygulama dosyaları ve yayımlama profilleri.
+*.nupkg
+*.snupkg
+*.pubxml
+*.publishsettings
+
+# Yapılandırma dosyaları ve hassas veriler içerebilecek dosyalar.
+appsettings.json
+appsettings.*.json
+appsecrets.json
+
+# Diğer yaygın yoksayılması gereken dosya türleri
+*.cache
+*.ilk
+*.ncb
+*.sdf
+*.swp
+*.DS_Store
