@@ -21,28 +21,26 @@ namespace AspNetCoreWebAppTest
 
         public string ConsumeKafkaMessage()
         {
-            var conf = new ConsumerConfig
+            StringBuilder sb = new StringBuilder();
+
+            var config = new ConsumerConfig
             {
-                GroupId = "test-consumer-group",
                 BootstrapServers = _kafkaSettings.BootstrapServers,
+                GroupId = "test-consumer-group",
                 AutoOffsetReset = AutoOffsetReset.Earliest
             };
-            StringBuilder sb = new StringBuilder();
-            using (var c = new ConsumerBuilder<Ignore, string>(conf).Build())
-            {
-                var topicName = _kafkaSettings.TopicName;
-                c.Subscribe(topicName);
 
+            using (var consumer = new ConsumerBuilder<Ignore, string>(config).Build())
+            {
+                consumer.Subscribe(_kafkaSettings.TopicName);
                 try
                 {
-                    var cr = c.Consume();
-                    // Mesajı işle, örneğin: Console.WriteLine($"Consumed message '{cr.Value}' at: '{cr.TopicPartitionOffset}'.");
-                    sb.Append(cr.Message);
+                    var result = consumer.Consume();
+                    sb.Append(result.Message.Value);
                 }
                 catch (ConsumeException e)
                 {
-                    // Tüketim sırasında hata yönetimi
-                    Console.WriteLine($"Error occured: {e.Error.Reason}");
+                    sb.Append("hata: " + e.Error.Reason);
                 }
             }
 
