@@ -27,7 +27,8 @@ namespace AspNetCoreWebAppTest
             {
                 BootstrapServers = _kafkaSettings.BootstrapServers,
                 GroupId = "test-consumer-group",
-                
+                AutoOffsetReset = AutoOffsetReset.Earliest,
+                EnableAutoCommit = true,
             };
 
             using (var consumer = new ConsumerBuilder<Ignore, string>(config).Build())
