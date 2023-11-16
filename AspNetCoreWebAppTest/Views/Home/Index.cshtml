@@ -1,12 +1,22 @@
 ﻿@page
 @model Index
 @{
-    
+
 }
 
 <div class="text-center">
 
+    <!-- Kafka Mesaj Gönder Formu -->
+    <form method="post" action="/Home/ProducerKafkaMessage">
+        <div class="form-group">
+            <label for="kafkaMessage">Mesajınız</label>
+            <input type="text" class="form-control" id="kafkaMessage" name="message" placeholder="Mesajınızı yazın">
+        </div>
+        <button type="submit" class="btn btn-primary">Mesaj Gönder</button>
+    </form>
+
+    <!-- Kafka Mesaj Al Formu -->
     <form method="post" action="/Home/ConsumeKafkaMessage">
-        <button type="submit" class="btn btn-primary">Mesajları Getir Test</button>
+        <button type="submit" class="btn btn-secondary">Mesajları Getir Test</button>
     </form>
 </div>
