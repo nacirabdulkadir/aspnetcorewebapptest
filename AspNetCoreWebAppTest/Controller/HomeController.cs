@@ -23,46 +23,25 @@ namespace AspNetCoreWebAppTest
         {
             StringBuilder sb = new StringBuilder();
 
-            var conf = new ConsumerConfig
+            var config = new ConsumerConfig
             {
-                GroupId = "test-consumer-group",
                 BootstrapServers = _kafkaSettings.BootstrapServers,
-                // Otomatik offset commit'i devre dışı bırakmak için:
-                EnableAutoCommit = false,
-                // Eğer son tüketilmemiş mesajlardan başlamak isterseniz:
+                GroupId = "test-consumer-group",
                 AutoOffsetReset = AutoOffsetReset.Earliest
+                 
             };
 
-            using (var c = new ConsumerBuilder<Ignore, string>(conf).Build())
+            using (var consumer = new ConsumerBuilder<Ignore, string>(config).Build())
             {
-                c.Subscribe(_kafkaSettings.TopicName);
-
-                CancellationTokenSource cts = new CancellationTokenSource();
-                Console.CancelKeyPress += (_, e) => {
-                    e.Cancel = true;
-                    cts.Cancel();
-                };
-
+                consumer.Subscribe(_kafkaSettings.TopicName);
                 try
                 {
-                    while (true)
-                    {
-                        try
-                        {
-                            var cr = c.Consume(cts.Token);
-                            sb.Append($"'{cr.Value}' at: '{cr.TopicPartitionOffset}'.");
-                            
-                        }
-                        catch (ConsumeException e)
-                        {
-                            sb.Append($"Error occured: {e.Error.Reason}");
-                        }
-                    }
+                    var result = consumer.Consume();
+                    sb.Append(result.Message.Value);
                 }
-                catch (OperationCanceledException)
+                catch (ConsumeException e)
                 {
-                    // Consumer'ı kapatmak için:
-                    c.Close();
+                    sb.Append("hata: " + e.Error.Reason);
                 }
             }
 
