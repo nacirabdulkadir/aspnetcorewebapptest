@@ -1,5 +1,5 @@
 FROM mcr.microsoft.com/dotnet/sdk:6.0 AS build
-WORKDIR /src
+WORKDIR /src 
 
 # Projeyi kopyala ve baðýmlýlýklarý yeniden yükle
 COPY ["AspNetCoreWebAppTest.csproj", "."]

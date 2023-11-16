@@ -18,7 +18,7 @@ namespace AspNetCoreWebAppTest
         {
             return View();
         }   
-
+         
         public string ConsumeKafkaMessage()
         {
             StringBuilder sb = new StringBuilder();
