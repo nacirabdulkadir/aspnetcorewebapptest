@@ -23,25 +23,46 @@ namespace AspNetCoreWebAppTest
         {
             StringBuilder sb = new StringBuilder();
 
-            var config = new ConsumerConfig
+            var conf = new ConsumerConfig
             {
-                BootstrapServers = _kafkaSettings.BootstrapServers,
                 GroupId = "test-consumer-group",
-                AutoOffsetReset = AutoOffsetReset.Earliest,
-                EnableAutoCommit = true,
+                BootstrapServers = _kafkaSettings.BootstrapServers,
+                // Otomatik offset commit'i devre dışı bırakmak için:
+                EnableAutoCommit = false,
+                // Eğer son tüketilmemiş mesajlardan başlamak isterseniz:
+                AutoOffsetReset = AutoOffsetReset.Earliest
             };
 
-            using (var consumer = new ConsumerBuilder<Ignore, string>(config).Build())
+            using (var c = new ConsumerBuilder<Ignore, string>(conf).Build())
             {
-                consumer.Subscribe(_kafkaSettings.TopicName);
+                c.Subscribe(_kafkaSettings.TopicName);
+
+                CancellationTokenSource cts = new CancellationTokenSource();
+                Console.CancelKeyPress += (_, e) => {
+                    e.Cancel = true;
+                    cts.Cancel();
+                };
+
                 try
                 {
-                    var result = consumer.Consume();
-                    sb.Append(result.Message.Value);
+                    while (true)
+                    {
+                        try
+                        {
+                            var cr = c.Consume(cts.Token);
+                            sb.Append($"'{cr.Value}' at: '{cr.TopicPartitionOffset}'.");
+                            
+                        }
+                        catch (ConsumeException e)
+                        {
+                            sb.Append($"Error occured: {e.Error.Reason}");
+                        }
+                    }
                 }
-                catch (ConsumeException e)
+                catch (OperationCanceledException)
                 {
-                    sb.Append("hata: " + e.Error.Reason);
+                    // Consumer'ı kapatmak için:
+                    c.Close();
                 }
             }
 
