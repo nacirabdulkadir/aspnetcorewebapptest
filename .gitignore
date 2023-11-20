@@ -1,18 +1,13 @@
-# Öncelikle bin ve obj klasörleri yoksayılır, çünkü bunlar derleme sonuçlarıdır.
+# Derleme sonuçlarını içeren bin ve obj klasörleri yoksayılır.
 **/[Bb]in/
 **/[Oo]bj/
 
-AspNetCoreWebAppTest/bin/
-AspNetCoreWebAppTest/obj/
-
-
-# .NET Core projelerinde genellikle var olan log dosyaları ve diğer geçici dosyalar.
+# .NET Core projelerinde oluşabilecek log dosyaları ve geçici dosyalar.
 *.log
 *.log.*
 *.tmp
 
-# Eğer varsa, IDE ve editöre özgü ayar dosyaları yoksayılabilir.
-# Örneğin Visual Studio için:
+# IDE ve editöre özgü ayar dosyaları (örneğin Visual Studio için).
 *.user
 *.userosscache
 *.suo
@@ -20,22 +15,18 @@ AspNetCoreWebAppTest/obj/
 *.pdb
 *.opendb
 
-# Eğer Entity Framework kullanıyorsanız, migrations klasörü dışındaki tüm dosyaları yoksayabilirsiniz.
+# Entity Framework kullanımında migrations harici dosyaları yoksay.
 **/Migrations/*.cs
 !**/Migrations/*.Designer.cs
 
-# Eğer varsa, paketlenmiş uygulama dosyaları ve yayımlama profilleri.
+# Paketlenmiş uygulama dosyaları ve yayımlama profilleri.
 *.nupkg
 *.snupkg
 *.pubxml
 *.publishsettings
 
-# Yapılandırma dosyaları ve hassas veriler içerebilecek dosyalar.
-appsettings.json
-appsettings.*.json
-appsecrets.json
 
-# Diğer yaygın yoksayılması gereken dosya türleri
+# Yaygın olarak yoksayılması gereken diğer dosya türleri.
 *.cache
 *.ilk
 *.ncb
@@ -43,5 +34,6 @@ appsecrets.json
 *.swp
 *.DS_Store
 
-
-
+# Özel olarak eklenmesi gereken dizinler veya dosyalar varsa buraya eklenebilir.
+# Örneğin:
+# /path/to/specific/file/or/directory
