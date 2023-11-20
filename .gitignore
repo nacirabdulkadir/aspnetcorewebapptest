@@ -24,6 +24,9 @@
 *.snupkg
 *.pubxml
 *.publishsettings
+*.vsidx
+*.bin
+*.v2
 
 
 # Yaygın olarak yoksayılması gereken diğer dosya türleri.
