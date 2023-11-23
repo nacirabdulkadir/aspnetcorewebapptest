@@ -52,7 +52,7 @@
                     success: function (data) {
                         // İşlem başarılıysa burası çalışır
                         // 'data' değişkeni sunucudan gelen veriyi içerir
-                        $("#kafkaMessage").val(data);
+                        $("#AllMessages").val(data);
                         // Burada gelen veriyi sayfada göstermek için işlemler yapabilirsiniz
                     },
                     error: function () {
@@ -76,9 +76,11 @@
                     <div class="card-body">
                         <div class="form-group mb-3">
                             <form id="sendMessageForm">
-                                <label for="kafkaMessage">Mesajınız</label>
-                                <input type="text" class="form-control" id="kafkaMessage" name="message" placeholder="Mesajınızı yazın" style="height: 200px; width: 100%;">
+                                
+                                <input type="text" class="form-control" id="AllMessages" name="message"  style="height: 200px; width: 100%;">
 
+                     
+                                <input type="text" class="form-control" style="margin-top:20px" id="kafkaMessage" name="message" placeholder="Mesajınızı yazın">
 
                                 <!-- Form içeriği -->
                                 <button type="submit" style="margin-top:20px" class="btn btn-primary">Mesaj Gönder</button>
