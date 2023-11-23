@@ -53,7 +53,7 @@
                     success: function (data) {
                         // İşlem başarılıysa burası çalışır
                         // 'data' değişkeni sunucudan gelen veriyi içerir
-                        $("#AllMessages").val(data);
+                        $("#AllMessages").val($("#AllMessages").val() + "\n" + data);
                         // Burada gelen veriyi sayfada göstermek için işlemler yapabilirsiniz
                     },
                     error: function () {
