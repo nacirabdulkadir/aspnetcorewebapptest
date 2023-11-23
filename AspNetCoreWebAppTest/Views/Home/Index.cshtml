@@ -1,35 +1,104 @@
 ﻿@page
 @model Index
 @{
-  
+
 }
 
-<div class="container mt-5">
-    <div class="row justify-content-center">
-        <div class="col-md-6">
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>AspNetCoreWebAppTest</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/AspNetCoreWebAppTest.styles.css" asp-append-version="true" />
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
 
-            <!-- Kafka Mesaj Gönder Formu -->
-            <div class="card mb-4">
-                <div class="card-body">
-                    <form method="post" action="/Home/ProducerKafkaMessage">
+    <script>
+        $(document).ready(function () {
+            $("#sendMessageForm").submit(function (event) {
+                event.preventDefault(); // Normal form gönderimini engelle
+
+                var message = $("#kafkaMessage").val(); // Input değerini al
+
+                $.ajax({
+                    type: "POST",
+                    url: "/Home/ProducerKafkaMessage",
+                    data: { message: message },
+                    success: function (data) {
+                        // İşlem başarılıysa burası çalışır
+                        //alert("Mesaj başarıyla gönderildi");
+                    },
+                    error: function () {
+                        // Hata oluşursa burası çalışır
+                        //alert("Bir hata oluştu");
+                    }
+                });
+            });
+        });
+        $(document).ready(function () {
+
+            // Mesaj Gönder Fonksiyonu
+            // ...
+
+            // Mesajları Getir Fonksiyonu
+            $("#getMessagesForm").submit(function (event) {
+                event.preventDefault(); // Normal form gönderimini engelle
+
+                $.ajax({
+                    type: "GET",
+                    url: "/Home/ConsumeKafkaMessage",
+                    success: function (data) {
+                        // İşlem başarılıysa burası çalışır
+                        // 'data' değişkeni sunucudan gelen veriyi içerir
+                        $("#kafkaMessage").val(data);
+                        // Burada gelen veriyi sayfada göstermek için işlemler yapabilirsiniz
+                    },
+                    error: function () {
+                        // Hata oluşursa burası çalışır
+                        //alert("Bir hata oluştu");
+                    }
+                });
+            });
+        });
+    </script>
+
+
+</head>
+<body>
+    <div class="container mt-5">
+        <div class="row justify-content-center">
+            <div class="col-md-6">
+
+                <!-- Kafka Mesaj Gönder Formu -->
+                <div class="card mb-4">
+                    <div class="card-body">
                         <div class="form-group mb-3">
-                            <label for="kafkaMessage">Mesajınız</label>
-                            <input type="text" class="form-control" id="kafkaMessage" name="message" placeholder="Mesajınızı yazın">
+                            <form id="sendMessageForm">
+                                <label for="kafkaMessage">Mesajınız</label>
+                                <input type="text" class="form-control" id="kafkaMessage" name="message" placeholder="Mesajınızı yazın" style="height: 200px; width: 100%;">
+
+
+                                <!-- Form içeriği -->
+                                <button type="submit" style="margin-top:20px" class="btn btn-primary">Mesaj Gönder</button>
+                            </form>
                         </div>
-                        <button type="submit" class="btn btn-primary">Mesaj Gönder 2</button>
-                    </form>
+                    </div>
                 </div>
-            </div>
 
-            <!-- Kafka Mesaj Al Formu -->
-            <div class="card">
-                <div class="card-body">
-                    <form method="post" action="/Home/ConsumeKafkaMessage">
-                        <button type="submit" class="btn btn-secondary">Mesajları Getir</button>
-                    </form>
+                <!-- Kafka Mesaj Al Formu -->
+                <div class="card">
+                    <div class="card-body">
+                        <form id="getMessagesForm">
+                            <button type="submit" class="btn btn-secondary">Mesajları Getir</button>
+                        </form>
+                    </div>
                 </div>
-            </div>
 
+
+            </div>
         </div>
     </div>
-</div>
+</body>
+</html>

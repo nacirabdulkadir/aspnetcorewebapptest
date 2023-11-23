@@ -19,7 +19,7 @@ namespace AspNetCoreWebAppTest
             return View();
         }
 
-        [HttpPost]
+        [HttpGet] 
         public string ConsumeKafkaMessage()
         {
             StringBuilder sb = new StringBuilder();
@@ -29,7 +29,7 @@ namespace AspNetCoreWebAppTest
                 BootstrapServers = _kafkaSettings.BootstrapServers,
                 GroupId = "test-consumer-group",
                 AutoOffsetReset = AutoOffsetReset.Earliest,
-                EnableAutoCommit = false,
+                EnableAutoCommit = true,
                 
 
             }; 
