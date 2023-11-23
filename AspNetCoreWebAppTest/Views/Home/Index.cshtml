@@ -19,7 +19,7 @@
         $(document).ready(function () {
             $("#sendMessageForm").submit(function (event) {
                 event.preventDefault(); // Normal form gönderimini engelle
-
+              
                 var message = $("#kafkaMessage").val(); // Input değerini al
 
                 $.ajax({
@@ -29,6 +29,7 @@
                     success: function (data) {
                         // İşlem başarılıysa burası çalışır
                         //alert("Mesaj başarıyla gönderildi");
+                        $("#kafkaMessage").val("");
                     },
                     error: function () {
                         // Hata oluşursa burası çalışır
