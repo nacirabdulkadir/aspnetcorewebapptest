@@ -21,7 +21,8 @@ namespace AspNetCoreWebAppTest
             return View();
         }
 
-        [HttpGet] 
+        [HttpGet]
+        [HttpGet]
         public string ConsumeKafkaMessage()
         {
             StringBuilder sb = new StringBuilder();
@@ -31,16 +32,27 @@ namespace AspNetCoreWebAppTest
                 GroupId = "test-consumer-group",
                 BootstrapServers = _kafkaSettings.BootstrapServers,
                 AutoOffsetReset = AutoOffsetReset.Earliest,
-                EnableAutoCommit = true
+                EnableAutoCommit = false // Manuel commit için false yapın.
             };
 
             using (var consumer = new ConsumerBuilder<Ignore, string>(config).Build())
             {
                 consumer.Subscribe(_kafkaSettings.TopicName);
+
                 try
                 {
-                    var result = consumer.Consume();
-                    sb.Append(result.Message.Value);
+                    // Son mesajı almak için bir döngü
+                    ConsumeResult<Ignore, string> result = null;
+                    while (true)
+                    {
+                        result = consumer.Consume(CancellationToken.None);
+                        if (result == null)
+                        {
+                            break; // Zaman aşımına ulaşıldığında döngüden çık.
+                        }
+                        sb.Append(result.Message.Value);
+                        consumer.Commit(result); // Her mesajı okuduktan sonra commit yap.
+                    }
                 }
                 catch (ConsumeException e)
                 {
@@ -48,27 +60,9 @@ namespace AspNetCoreWebAppTest
                 }
             }
 
-            //using (var consumer = new ConsumerBuilder<Ignore, string>(config).Build())
-            //{
-            //    consumer.Subscribe(_kafkaSettings.TopicName);
-            //    var cancellationToken = new CancellationTokenSource();
-
-            //    try
-            //    {
-            //        while (!cancellationToken.IsCancellationRequested)
-            //        {
-            //            var consumeResult = consumer.Consume(cancellationToken.Token);
-            //            sb.Append(consumeResult.Message.Value);
-            //        }
-            //    }
-            //    catch (OperationCanceledException)
-            //    {
-            //        consumer.Close();
-            //    }
-            //}
-
             return sb.ToString();
         }
+
 
 
         [HttpPost]  
