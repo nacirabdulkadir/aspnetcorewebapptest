@@ -33,38 +33,38 @@ namespace AspNetCoreWebAppTest
                 AutoOffsetReset = AutoOffsetReset.Earliest
             };
 
-            //using (var consumer = new ConsumerBuilder<Ignore, string>(config).Build())
-            //{
-            //    consumer.Subscribe(_kafkaSettings.TopicName);
-            //    try
-            //    {
-            //        var result = consumer.Consume();
-            //        sb.Append(result.Message.Value);
-            //    }
-            //    catch (ConsumeException e)
-            //    {
-            //        sb.Append("hata: " + e.Error.Reason);
-            //    }
-            //}
-
             using (var consumer = new ConsumerBuilder<Ignore, string>(config).Build())
             {
                 consumer.Subscribe(_kafkaSettings.TopicName);
-                var cancellationToken = new CancellationTokenSource();
-
                 try
                 {
-                    while (!cancellationToken.IsCancellationRequested)
-                    {
-                        var consumeResult = consumer.Consume(cancellationToken.Token);
-                        sb.Append(consumeResult.Message.Value);
-                    }
+                    var result = consumer.Consume();
+                    sb.Append(result.Message.Value);
                 }
-                catch (OperationCanceledException)
+                catch (ConsumeException e)
                 {
-                    consumer.Close();
+                    sb.Append("hata: " + e.Error.Reason);
                 }
             }
+
+            //using (var consumer = new ConsumerBuilder<Ignore, string>(config).Build())
+            //{
+            //    consumer.Subscribe(_kafkaSettings.TopicName);
+            //    var cancellationToken = new CancellationTokenSource();
+
+            //    try
+            //    {
+            //        while (!cancellationToken.IsCancellationRequested)
+            //        {
+            //            var consumeResult = consumer.Consume(cancellationToken.Token);
+            //            sb.Append(consumeResult.Message.Value);
+            //        }
+            //    }
+            //    catch (OperationCanceledException)
+            //    {
+            //        consumer.Close();
+            //    }
+            //}
 
             return sb.ToString();
         }
