@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 using System.Text;
+using static Confluent.Kafka.ConfigPropertyNames;
 
 namespace AspNetCoreWebAppTest
 {
@@ -13,6 +14,7 @@ namespace AspNetCoreWebAppTest
         public HomeController(IOptions<KafkaSettings> kafkaSettings)
         {
             _kafkaSettings = kafkaSettings.Value;
+
         }
         public IActionResult Index()
         {
@@ -26,25 +28,41 @@ namespace AspNetCoreWebAppTest
 
             var config = new ConsumerConfig
             {
-                BootstrapServers = _kafkaSettings.BootstrapServers,
                 GroupId = "test-consumer-group",
-                AutoOffsetReset = AutoOffsetReset.Earliest,
-                EnableAutoCommit = true,
-                
+                BootstrapServers = _kafkaSettings.BootstrapServers,
+                AutoOffsetReset = AutoOffsetReset.Earliest
+            };
 
-            }; 
+            //using (var consumer = new ConsumerBuilder<Ignore, string>(config).Build())
+            //{
+            //    consumer.Subscribe(_kafkaSettings.TopicName);
+            //    try
+            //    {
+            //        var result = consumer.Consume();
+            //        sb.Append(result.Message.Value);
+            //    }
+            //    catch (ConsumeException e)
+            //    {
+            //        sb.Append("hata: " + e.Error.Reason);
+            //    }
+            //}
 
             using (var consumer = new ConsumerBuilder<Ignore, string>(config).Build())
             {
                 consumer.Subscribe(_kafkaSettings.TopicName);
+                var cancellationToken = new CancellationTokenSource();
+
                 try
                 {
-                    var result = consumer.Consume();
-                    sb.Append(result.Message.Value);
+                    while (!cancellationToken.IsCancellationRequested)
+                    {
+                        var consumeResult = consumer.Consume(cancellationToken.Token);
+                        sb.Append(consumeResult.Message.Value);
+                    }
                 }
-                catch (ConsumeException e)
+                catch (OperationCanceledException)
                 {
-                    sb.Append("hata: " + e.Error.Reason);
+                    consumer.Close();
                 }
             }
 
@@ -52,8 +70,7 @@ namespace AspNetCoreWebAppTest
         }
 
 
-        [HttpPost]
-  
+        [HttpPost]  
         public async Task<IActionResult> ProducerKafkaMessage(string message)
         {
             var config = new ProducerConfig
@@ -85,5 +102,7 @@ namespace AspNetCoreWebAppTest
         public string BootstrapServers { get; set; }
         public string TopicName { get; set; }
     }
+
+
 
 }
