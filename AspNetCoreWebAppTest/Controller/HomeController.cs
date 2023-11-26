@@ -40,11 +40,11 @@ namespace AspNetCoreWebAppTest
                 try
                 {
                     // Belirli bir sayıda mesajı oku veya belirli bir süre boyunca mesajları oku
-                    for (int i = 0; i < 3; i++) // Örneğin, en fazla 100 mesaj oku
+                    for (int i = 0; i < 10; i++) // Örneğin, en fazla 100 mesaj oku
                     {
-                        var result = consumer.Consume(); 
+                        var result = consumer.Consume();
                         if (result == null)
-                            break; // Mesaj yoksa döngüden çık
+                            return sb.ToString();
 
                         sb.AppendLine(result.Message.Value);
                         consumer.Commit();
