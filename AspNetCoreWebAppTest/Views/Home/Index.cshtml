@@ -53,7 +53,7 @@
                     success: function (data) {
                         // İşlem başarılıysa burası çalışır
                         // 'data' değişkeni sunucudan gelen veriyi içerir
-                        $("#AllMessages").val($("#AllMessages").val() + "\n" + data);
+                        $("#AllMessages").val(data);
                         // Burada gelen veriyi sayfada göstermek için işlemler yapabilirsiniz
                     },
                     error: function () {
@@ -94,7 +94,7 @@
                 <div class="card">
                     <div class="card-body">
                         <form id="getMessagesForm">
-                            <button type="submit" class="btn btn-secondary">Mesajları Getir2</button>
+                            <button type="submit" class="btn btn-secondary">Mesajları Getir</button>
                         </form>
                     </div>
                 </div>

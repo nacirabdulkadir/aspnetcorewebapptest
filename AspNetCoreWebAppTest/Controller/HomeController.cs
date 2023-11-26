@@ -31,7 +31,7 @@ namespace AspNetCoreWebAppTest
                 GroupId = "test-consumer-group",
                 BootstrapServers = _kafkaSettings.BootstrapServers,
                 AutoOffsetReset = AutoOffsetReset.Earliest,
-                EnableAutoCommit = false // Manuel commit için false yapın.
+                EnableAutoCommit = false
             };
 
             using (var consumer = new ConsumerBuilder<Ignore, string>(config).Build())
@@ -40,11 +40,9 @@ namespace AspNetCoreWebAppTest
 
                 try
                 {
-                    // Son mesajı almak için bir döngü
-                    ConsumeResult<Ignore, string> result = null;
                     while (true)
                     {
-                        result = consumer.Consume(CancellationToken.None);
+                        var result = consumer.Consume(TimeSpan.FromSeconds(5)); // 5 saniyelik zaman aşımı
                         if (result == null)
                         {
                             break; // Zaman aşımına ulaşıldığında döngüden çık.
@@ -55,13 +53,16 @@ namespace AspNetCoreWebAppTest
                 }
                 catch (ConsumeException e)
                 {
-                    sb.Append("hata: " + e.Error.Reason);
+                    sb.Append("Kafka hata: " + e.Error.Reason);
+                }
+                catch (Exception e)
+                {
+                    sb.Append("Genel hata: " + e.Message);
                 }
             }
 
             return sb.ToString();
         }
-
 
 
         [HttpPost]  
