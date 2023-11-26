@@ -30,7 +30,7 @@ namespace AspNetCoreWebAppTest
                 BootstrapServers = _kafkaSettings.BootstrapServers,
                 GroupId = "test-consumer-group",
                 AutoOffsetReset = AutoOffsetReset.Earliest,
-                EnableAutoCommit = true,
+                EnableAutoCommit = false, // Otomatik commit'i devre dışı bırak
             };
 
             using (var consumer = new ConsumerBuilder<Ignore, string>(config).Build())
@@ -39,15 +39,23 @@ namespace AspNetCoreWebAppTest
 
                 try
                 {
-                    // Belirli bir sayıda mesajı oku veya belirli bir süre boyunca mesajları oku
-                    for (int i = 0; i < 100; i++) // Örneğin, en fazla 100 mesaj oku
-                    {
-                        var result = consumer.Consume(); 
-                        if (result == null)
-                            break; // Mesaj yoksa döngüden çık
+                    int commitInterval = 10; // Her 10 mesajda bir commit yap
+                    int messageCount = 0;
 
-                        sb.AppendLine(result.Message.Value);
-                        consumer.Commit();
+                    while (messageCount < commitInterval)
+                    {
+                        var result = consumer.Consume(); // Mesajı bekliyor ve okuyor
+                        if (result != null)
+                        {
+                            sb.AppendLine(result.Message.Value);
+                            messageCount++;
+
+                            if (messageCount >= commitInterval)
+                            {
+                                consumer.Commit(); // Toplu olarak commit yap
+                                messageCount = 0; // Mesaj sayacını sıfırla
+                            }
+                        }
                     }
                 }
                 catch (ConsumeException e)
