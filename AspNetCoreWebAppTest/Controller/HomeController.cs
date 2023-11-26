@@ -31,26 +31,32 @@ namespace AspNetCoreWebAppTest
                 GroupId = "test-consumer-group",
                 AutoOffsetReset = AutoOffsetReset.Earliest,
                 EnableAutoCommit = true,
-
-
             };
 
             using (var consumer = new ConsumerBuilder<Ignore, string>(config).Build())
             {
                 consumer.Subscribe(_kafkaSettings.TopicName);
+
                 try
                 {
-                    var result = consumer.Consume();
-                    sb.Append(result.Message.Value);
-                    consumer.Commit();
+                    // Belirli bir sayıda mesajı oku veya belirli bir süre boyunca mesajları oku
+                    for (int i = 0; i < 100; i++) // Örneğin, en fazla 100 mesaj oku
+                    {
+                        var result = consumer.Consume(1000); // 1000ms bekleme süresi
+                        if (result == null)
+                            break; // Mesaj yoksa döngüden çık
+
+                        sb.AppendLine(result.Message.Value);
+                        consumer.Commit();
+                    }
                 }
                 catch (ConsumeException e)
                 {
-                    sb.Append("hata: " + e.Error.Reason);
+                    sb.AppendLine("Hata: " + e.Error.Reason);
                 }
             }
 
-            return sb.ToString(); 
+            return sb.ToString();
         }
 
 
