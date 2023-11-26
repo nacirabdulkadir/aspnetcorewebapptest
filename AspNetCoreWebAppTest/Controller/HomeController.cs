@@ -20,7 +20,6 @@ namespace AspNetCoreWebAppTest
         {
             return View();
         }
-
         [HttpGet]
         public string ConsumeKafkaMessage()
         {
@@ -28,41 +27,32 @@ namespace AspNetCoreWebAppTest
 
             var config = new ConsumerConfig
             {
-                GroupId = "test-consumer-group",
                 BootstrapServers = _kafkaSettings.BootstrapServers,
+                GroupId = "test-consumer-group",
                 AutoOffsetReset = AutoOffsetReset.Earliest,
-                EnableAutoCommit = false
+                EnableAutoCommit = true,
+
+
             };
 
             using (var consumer = new ConsumerBuilder<Ignore, string>(config).Build())
             {
                 consumer.Subscribe(_kafkaSettings.TopicName);
-
                 try
                 {
-                    while (true)
-                    {
-                        var result = consumer.Consume(TimeSpan.FromSeconds(5)); // 5 saniyelik zaman aşımı
-                        if (result == null)
-                        {
-                            break; // Zaman aşımına ulaşıldığında döngüden çık.
-                        }
-                        sb.Append(result.Message.Value);
-                        consumer.Commit(result); // Her mesajı okuduktan sonra commit yap.
-                    }
+                    var result = consumer.Consume();
+                    sb.Append(result.Message.Value);
+                    consumer.Commit();
                 }
                 catch (ConsumeException e)
                 {
-                    sb.Append("Kafka hata: " + e.Error.Reason);
-                }
-                catch (Exception e)
-                {
-                    sb.Append("Genel hata: " + e.Message);
+                    sb.Append("hata: " + e.Error.Reason);
                 }
             }
 
             return sb.ToString();
         }
+
 
 
         [HttpPost]  
