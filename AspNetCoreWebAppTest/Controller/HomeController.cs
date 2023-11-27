@@ -39,17 +39,17 @@ namespace AspNetCoreWebAppTest
 
                 try
                 {
-                    // Belirli bir sayıda mesajı oku veya belirli bir süre boyunca mesajları oku
-                    for (int i = 0; i < 3; i++) // Örneğin, en fazla 100 mesaj oku
-                    {
-                        var result = consumer.Consume(2000);
+                    //// Belirli bir sayıda mesajı oku veya belirli bir süre boyunca mesajları oku
+                    //for (int i = 0; i < consumer.; i++) // Örneğin, en fazla 100 mesaj oku
+                    //{
+                        var result = consumer.Consume();
                         
                         if (result == null)
                             return sb.ToString();
 
                         sb.AppendLine($"Partition: {result.Partition} Mesaj: { result.Message.Value}");
                         consumer.Commit();
-                    }
+                    //}
                 }
                 catch (ConsumeException e)
                 {
@@ -61,6 +61,14 @@ namespace AspNetCoreWebAppTest
             return sb.ToString();
         }
 
+        [HttpGet]
+        public string ConsumeKafkaMessage2()
+        {
+            StringBuilder sb = new StringBuilder();
+            sb.AppendLine("aa");
+            sb.AppendLine("bb");
+            return sb  .ToString();
+        }
 
 
         [HttpPost]  
