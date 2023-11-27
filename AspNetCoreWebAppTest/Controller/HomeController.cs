@@ -61,15 +61,6 @@ namespace AspNetCoreWebAppTest
             return sb.ToString();
         }
 
-        [HttpGet]
-        public string ConsumeKafkaMessage2()
-        {
-            StringBuilder sb = new StringBuilder();
-            sb.AppendLine("aa");
-            sb.AppendLine("bb");
-            return sb  .ToString();
-        }
-
 
         [HttpPost]  
         public async Task<IActionResult> ProducerKafkaMessage(string message)
