@@ -35,7 +35,7 @@ namespace AspNetCoreWebAppTest
 
             using (var consumer = new ConsumerBuilder<Ignore, string>(config).Build())
             {
-                consumer.Subscribe(_kafkaSettings.TopicName);
+                consumer.Subscribe(_kafkaSettings.TopicJava);
 
                 try
                 {
@@ -47,7 +47,7 @@ namespace AspNetCoreWebAppTest
                         if (result == null)
                             return sb.ToString();
 
-                        sb.AppendLine($"Partition: {result.Partition} Mesaj: { result.Message.Value}");
+                        sb.AppendLine($"Java: {result.Message.Value}");
                         consumer.Commit();
                     //}
                 }
@@ -74,7 +74,7 @@ namespace AspNetCoreWebAppTest
             {
                 try
                 {
-                    var result = await producer.ProduceAsync(_kafkaSettings.TopicName, new Message<Null, string> { Value = message });
+                    var result = await producer.ProduceAsync(_kafkaSettings.TopicAspNet, new Message<Null, string> { Value = message });
                     return Ok($"Mesaj gönderildi: '{result.Value}' Topic: '{result.Topic}', Partition: '{result.Partition}', Offset: '{result.Offset}'");
                 }
                 catch (ProduceException<Null, string> e)
@@ -92,7 +92,8 @@ namespace AspNetCoreWebAppTest
     public class KafkaSettings
     {
         public string BootstrapServers { get; set; }
-        public string TopicName { get; set; }
+        public string TopicJava { get; set; }
+        public string TopicAspNet { get; set; }
     }
 
 

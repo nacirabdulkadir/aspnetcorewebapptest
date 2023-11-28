@@ -28,7 +28,8 @@
                     data: { message: message },
                     success: function (data) {
                         // İşlem başarılıysa burası çalışır
-                        //alert("Mesaj başarıyla gönderildi");
+                        //alert("Mesaj başarıyla gönderildi");                        
+                        $("#AllMessages").val($("#AllMessages").val() + "\n" + $("#kafkaMessage").val());
                         $("#kafkaMessage").val("");
                     },
                     error: function () {
