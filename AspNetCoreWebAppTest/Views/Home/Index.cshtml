@@ -50,7 +50,7 @@
                 $("#lblGetMessageStatus").text("Mesaj getiriliyor...");
                 $.ajax({
                     type: "GET",
-                    url: "/Home/ConsumeKafkaMessages",
+                    url: "/Home/ConsumeKafkaMessage",
                     success: function (data) {
                         // İşlem başarılıysa burası çalışır
                         // 'data' değişkeni sunucudan gelen veriyi içerir
