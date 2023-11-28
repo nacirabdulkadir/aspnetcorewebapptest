@@ -89,7 +89,7 @@ namespace AspNetCoreWebAppTest
 
                         if (result != null)
                         {
-                            sb.AppendLine($"<b>Java:</b> {result.Message.Value}");
+                            sb.AppendLine($"Java: {result.Message.Value}");
                             consumer.Commit();
                         }
                     }

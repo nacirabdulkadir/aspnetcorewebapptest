@@ -29,7 +29,7 @@
                     success: function (data) {
                         // İşlem başarılıysa burası çalışır
                         //alert("Mesaj başarıyla gönderildi");                        
-                        $("#AllMessages").val($("#AllMessages").val() + "\n<b>AspNet:</b>" + $("#kafkaMessage").val() + "\n");
+                        $("#AllMessages").val($("#AllMessages").val() + "\nAspNet: " + $("#kafkaMessage").val() + "\n");
                         $("#kafkaMessage").val("");
                     },
                     error: function () {
