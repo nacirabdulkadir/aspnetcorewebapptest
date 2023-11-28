@@ -21,7 +21,7 @@ namespace AspNetCoreWebAppTest
             return View();
         }
         [HttpGet]
-        public string ConsumeKafkaMessage()
+        public string ConsumeKafkaMessageFirst()
         {
             StringBuilder sb = new StringBuilder();
 
@@ -29,8 +29,7 @@ namespace AspNetCoreWebAppTest
             {
                 BootstrapServers = _kafkaSettings.BootstrapServers,
                 GroupId = "test-consumer-group",
-                AutoOffsetReset = AutoOffsetReset.Earliest,
-                EnableAutoCommit = true,
+                AutoOffsetReset = AutoOffsetReset.Earliest
             };
 
             using (var consumer = new ConsumerBuilder<Ignore, string>(config).Build())
@@ -39,22 +38,73 @@ namespace AspNetCoreWebAppTest
 
                 try
                 {
-                    //// Belirli bir sayıda mesajı oku veya belirli bir süre boyunca mesajları oku
-                    //for (int i = 0; i < consumer.; i++) // Örneğin, en fazla 100 mesaj oku
-                    //{
-                        var result = consumer.Consume();
-                        
-                        if (result == null)
-                            return sb.ToString();
 
-                        sb.AppendLine($"Java: {result.Message.Value}");
-                        consumer.Commit();
-                    //}
+                    var result = consumer.Consume();
+
+                    if (result == null)
+                        return sb.ToString();
+
+                    sb.AppendLine($"<b>Java:</b> {result.Message.Value}");
+                    consumer.Commit();
+
                 }
                 catch (ConsumeException e)
                 {
                     sb.AppendLine("Hata: " + e.Error.Reason);
                     return sb.ToString();
+                }
+            }
+
+            return sb.ToString();
+        }
+
+
+        [HttpGet]
+        public string ConsumeKafkaMessages()
+        {
+            StringBuilder sb = new StringBuilder();
+
+            var config = new ConsumerConfig
+            {
+                BootstrapServers = _kafkaSettings.BootstrapServers,
+                GroupId = "test-consumer-group",
+                AutoOffsetReset = AutoOffsetReset.Earliest
+            };
+
+            using (var consumer = new ConsumerBuilder<Ignore, string>(config).Build())
+            {
+                consumer.Subscribe(_kafkaSettings.TopicJava);
+
+                CancellationTokenSource cts = new CancellationTokenSource();
+                Console.CancelKeyPress += (_, e) => {
+                    e.Cancel = true; // prevent the process from terminating.
+                    cts.Cancel();
+                };
+
+                try
+                {
+                    while (!cts.Token.IsCancellationRequested)
+                    {
+                        var result = consumer.Consume(cts.Token);
+
+                        if (result != null)
+                        {
+                            sb.AppendLine($"<b>Java:</b> {result.Message.Value}");
+                            consumer.Commit();
+                        }
+                    }
+                }
+                catch (OperationCanceledException)
+                {
+                    // Ctrl-C was pressed.
+                }
+                catch (ConsumeException e)
+                {
+                    sb.AppendLine("Hata: " + e.Error.Reason);
+                }
+                finally
+                {
+                    consumer.Close();
                 }
             }
 
