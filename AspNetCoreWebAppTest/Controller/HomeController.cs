@@ -39,13 +39,19 @@ namespace AspNetCoreWebAppTest
                 try
                 {
 
-                    var result = consumer.Consume();
 
-                    if (result == null)
-                        return sb.ToString();
+                    while (true)
+                    {
+                        var result = consumer.Consume(TimeSpan.FromSeconds(3)); // 3 saniyelik zaman aşımı
+                        if (result == null)
+                        {
+                            break; // Zaman aşımına ulaşıldığında döngüden çık.
+                        }
+                        sb.AppendLine($"Java: {result.Message.Value}");
+                        consumer.Commit(result); // Her mesajı okuduktan sonra commit yap.
+                    }
 
-                    sb.AppendLine($"Java: {result.Message.Value}");
-                    consumer.Commit();
+                    
                     consumer.Close();
 
                 }
