@@ -42,7 +42,7 @@ namespace AspNetCoreWebAppTest
 
                     while (true)
                     {
-                        var result = consumer.Consume(TimeSpan.FromSeconds(3)); // 3 saniyelik zaman aşımı
+                        var result = consumer.Consume(TimeSpan.FromSeconds(1)); // 1 saniyelik zaman aşımı
                         if (result == null)
                         {
                             break; // Zaman aşımına ulaşıldığında döngüden çık.
