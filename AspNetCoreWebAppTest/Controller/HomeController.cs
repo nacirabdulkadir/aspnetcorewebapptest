@@ -46,6 +46,7 @@ namespace AspNetCoreWebAppTest
 
                     sb.AppendLine($"Java: {result.Message.Value}");
                     consumer.Commit();
+                    consumer.Close();
 
                 }
                 catch (ConsumeException e)
@@ -58,60 +59,7 @@ namespace AspNetCoreWebAppTest
             return sb.ToString();
         }
 
-
-        [HttpGet]
-        public string ConsumeKafkaMessages()
-        {
-            StringBuilder sb = new StringBuilder();
-
-            var config = new ConsumerConfig
-            {
-                BootstrapServers = _kafkaSettings.BootstrapServers,
-                GroupId = "test-consumer-group",
-                AutoOffsetReset = AutoOffsetReset.Earliest
-            };
-
-            using (var consumer = new ConsumerBuilder<Ignore, string>(config).Build())
-            {
-                consumer.Subscribe(_kafkaSettings.TopicJava);
-
-                CancellationTokenSource cts = new CancellationTokenSource();
-                Console.CancelKeyPress += (_, e) => {
-                    e.Cancel = true; // prevent the process from terminating.
-                    cts.Cancel();
-                };
-
-                try
-                {
-                    while (!cts.Token.IsCancellationRequested)
-                    {
-                        var result = consumer.Consume(cts.Token);
-
-                        if (result != null)
-                        {
-                            sb.AppendLine($"Java: {result.Message.Value}");
-                            consumer.Commit();
-                        }
-                    }
-                }
-                catch (OperationCanceledException)
-                {
-                    // Ctrl-C was pressed.
-                }
-                catch (ConsumeException e)
-                {
-                    sb.AppendLine("Hata: " + e.Error.Reason);
-                }
-                finally
-                {
-                    consumer.Close();
-                }
-            }
-
-            return sb.ToString();
-        }
-
-
+      
         [HttpPost]  
         public async Task<IActionResult> ProducerKafkaMessage(string message)
         {
